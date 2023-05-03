@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">StoryAppSubmission</string>
+    <string name="title_welcome_page">Welcome to Dicoding.</string>
+    <string name="message_welcome_page">This application displays a list of stories from friends who are studying and graduating from Dicoding.</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="copyright">©Dicoding/Arvandha</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="signup">Sign up</string>
+    <string name="registerquestion">Dont have account?</string>
+    <string name="loginquestion">Have Account?</string>
+    <string name="title_login_page">Login Page</string>
+    <string name="title_register_page">Register Page</string>
+    <string name="message_login_page">Please input your account!</string>
+    <string name="message_register_page">Please register your account!</string>
+</resources>
