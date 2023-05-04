@@ -5,6 +5,7 @@
     <string name="message_welcome_page">Aplikasi ini menampilkan daftar cerita dari teman-teman yang sedang belajar dan lulus Dicoding.</string>
     <string name="login">Masuk</string>
     <string name="register">Daftar</string>
+    <string name="story">Halaman Cerita</string>
     <string name="copyright">©Dicoding/Arvandha</string>
     <string name="name">Nama</string>
     <string name="email">Alamat</string>

@@ -16,7 +16,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginStart="310dp"
         android:padding="8dp"
-        android:src="@drawable/ic_baseline_settings_24" />
+        android:src="@drawable/ic_baseline_language_24" />
 
     <ImageView
         android:id="@+id/img_main"

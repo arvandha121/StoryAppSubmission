@@ -82,7 +82,6 @@ class RegisterActivity : AppCompatActivity() {
                         ).show()
                     } else {
                         startActivity(Intent(this@RegisterActivity, LoginActivity::class.java))
-
                         Toast.makeText(
                             this@RegisterActivity,
                             responseBody.message,
