@@ -11,6 +11,7 @@
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="signup">Sign up</string>
+    <string name="logoutButton">Logout</string>
     <string name="registerquestion">Dont have account?</string>
     <string name="loginquestion">Have Account?</string>
     <string name="title_login_page">Login Page</string>

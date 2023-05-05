@@ -11,6 +11,7 @@
     <string name="email">Alamat</string>
     <string name="password">Kata Sandi</string>
     <string name="signup">Daftar</string>
+    <string name="logoutButton">Keluar</string>
     <string name="registerquestion">Tidak punya akun ?</string>
     <string name="loginquestion">Punya akun ?</string>
     <string name="title_login_page">Halaman Login</string>
