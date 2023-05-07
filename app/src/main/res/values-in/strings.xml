@@ -3,6 +3,8 @@
     <string name="app_name">StoryAppSubmission</string>
     <string name="title_welcome_page">Selamat Datang di Dicoding.</string>
     <string name="message_welcome_page">Aplikasi ini menampilkan daftar cerita dari teman-teman yang sedang belajar dan lulus Dicoding.</string>
+    <string name="name_user">Nama User</string>
+    <string name="description">Deskripsi</string>
     <string name="login">Masuk</string>
     <string name="register">Daftar</string>
     <string name="story">Halaman Cerita</string>

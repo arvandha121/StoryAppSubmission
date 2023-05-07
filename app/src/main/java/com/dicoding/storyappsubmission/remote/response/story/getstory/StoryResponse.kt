@@ -1,17 +1,17 @@
-package com.dicoding.storyappsubmission.remote.response.login
+package com.dicoding.storyappsubmission.remote.response.story.getstory
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class LoginResponse(
+data class StoryResponse (
     @field:SerializedName("error")
     val error: Boolean? = null,
 
     @field:SerializedName("message")
     val message: String? = null,
 
-    @field:SerializedName("loginResult")
-    val login: Login? = null
+    @field:SerializedName("listStory")
+    val listStory: List<ListStory?>? = null
 ) : Parcelable

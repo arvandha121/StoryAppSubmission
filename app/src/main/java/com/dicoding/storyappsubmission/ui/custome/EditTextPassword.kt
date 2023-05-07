@@ -3,14 +3,11 @@ package com.dicoding.storyappsubmission.ui.custome
 import android.content.Context
 import android.graphics.Canvas
 import android.text.Editable
-import android.text.InputType
 import android.text.TextWatcher
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.widget.AppCompatEditText
-import okhttp3.internal.notify
 
 class EditTextPassword : AppCompatEditText, View.OnTouchListener {
 

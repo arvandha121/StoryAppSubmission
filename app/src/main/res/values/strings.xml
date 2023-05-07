@@ -3,6 +3,8 @@
     <string name="app_name">StoryAppSubmission</string>
     <string name="title_welcome_page">Welcome to Dicoding.</string>
     <string name="message_welcome_page">This application displays a list of stories from friends who are studying and graduating from Dicoding.</string>
+    <string name="name_user">Username</string>
+    <string name="description">Description</string>
     <string name="login">Login</string>
     <string name="register">Register</string>
     <string name="story">StoryPage</string>
