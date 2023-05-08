@@ -1,11 +1,9 @@
 package com.dicoding.storyappsubmission.ui.view.activity.story
 
-import android.content.ContentValues.TAG
 import android.content.Intent
 import android.content.Intent.ACTION_GET_CONTENT
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
-import android.location.Location
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -26,7 +24,6 @@ import com.dicoding.storyappsubmission.remote.response.story.addstory.AddStoryRe
 import com.dicoding.storyappsubmission.ui.createCustomTempFile
 import com.dicoding.storyappsubmission.ui.reduceFileImage
 import com.dicoding.storyappsubmission.ui.uriToFile
-import com.dicoding.storyappsubmission.ui.view.MainActivity
 import com.dicoding.storyappsubmission.ui.view.activity.story.model.AddStoryViewModel
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -45,7 +42,7 @@ class AddStoryActivity : AppCompatActivity() {
     private lateinit var currentPhotoPath: String
     private var getFile: File? = null
 
-    fun String?.generateToken(): String? = if(!this.isNullOrEmpty()) "Bearer $this" else null
+    fun String?.generateToken(): String? = if (!this.isNullOrEmpty()) "Bearer $this" else null
     private val pref = UserInstance.getInstance(dataStore)
 
     private val launcherIntentCamera = registerForActivityResult(
@@ -162,9 +159,10 @@ class AddStoryActivity : AppCompatActivity() {
     }
 
     private fun startGallery() {
-        val intent = Intent()
-        intent.action = ACTION_GET_CONTENT
-        intent.type = "image/*"
+        val intent = Intent().apply {
+            action = ACTION_GET_CONTENT
+            type = "image/*"
+        }
         val chooser = Intent.createChooser(intent, getString(R.string.choosePicture))
         launcherIntentGallery.launch(chooser)
     }
@@ -172,10 +170,11 @@ class AddStoryActivity : AppCompatActivity() {
     private fun startUpload() {
         if (getFile != null) {
             val file = reduceFileImage(getFile as File)
-            val description = binding.descriptions.toString().toRequestBody("text/plain".toMediaType())
+            val description =
+                binding.descriptions.toString().toRequestBody("text/plain".toMediaType())
             val requestImageFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
             val imageMultipart: MultipartBody.Part = MultipartBody.Part.createFormData(
-                "photo",
+                PHOTO,
                 file.name,
                 requestImageFile
             )
@@ -190,8 +189,8 @@ class AddStoryActivity : AppCompatActivity() {
                         call: Call<AddStoryResponse>,
                         response: Response<AddStoryResponse>
                     ) {
+                        val responseBody = response.body()
                         if (response.isSuccessful) {
-                            val responseBody = response.body()
                             if (responseBody != null && !responseBody.error!!) {
                                 Toast.makeText(
                                     this@AddStoryActivity,
@@ -212,7 +211,7 @@ class AddStoryActivity : AppCompatActivity() {
                     override fun onFailure(call: Call<AddStoryResponse>, t: Throwable) {
                         Toast.makeText(
                             this@AddStoryActivity,
-                            "Failed",
+                            FAILED,
                             Toast.LENGTH_SHORT
                         ).show()
                     }
@@ -233,7 +232,7 @@ class AddStoryActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val DATA = "data"
+        const val FAILED = "failed"
         const val PHOTO = "photo"
         const val CAMERA_X_RESULT = 200
 
