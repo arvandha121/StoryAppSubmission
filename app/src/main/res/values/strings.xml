@@ -20,4 +20,11 @@
     <string name="title_register_page">Register Page</string>
     <string name="message_login_page">Please input your account!</string>
     <string name="message_register_page">Please register your account!</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
+    <string name="upload">Upload</string>
+    <string name="addStory">Add Story</string>
+    <string name="permission">Don\'t have permission</string>
+    <string name="fill_in">Please Fill In</string>
+    <string name="choosePicture">Choose Picture</string>
 </resources>

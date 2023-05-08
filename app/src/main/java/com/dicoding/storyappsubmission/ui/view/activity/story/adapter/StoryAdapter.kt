@@ -1,4 +1,4 @@
-package com.dicoding.storyappsubmission.ui.view.activity.story
+package com.dicoding.storyappsubmission.ui.view.activity.story.adapter
 
 import android.app.Activity
 import android.content.Intent

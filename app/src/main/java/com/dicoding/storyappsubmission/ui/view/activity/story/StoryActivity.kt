@@ -19,6 +19,8 @@ import com.dicoding.storyappsubmission.remote.UserInstance
 import com.dicoding.storyappsubmission.remote.response.story.getstory.ListStory
 import com.dicoding.storyappsubmission.ui.view.MainActivity
 import com.dicoding.storyappsubmission.ui.view.activity.login.LoginActivity
+import com.dicoding.storyappsubmission.ui.view.activity.story.adapter.StoryAdapter
+import com.dicoding.storyappsubmission.ui.view.activity.story.model.StoryViewModel
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 

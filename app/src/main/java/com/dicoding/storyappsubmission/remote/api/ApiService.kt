@@ -5,6 +5,7 @@ import com.dicoding.storyappsubmission.remote.response.register.RegisterResponse
 import com.dicoding.storyappsubmission.remote.response.story.addstory.AddStoryResponse
 import com.dicoding.storyappsubmission.remote.response.story.getstory.StoryResponse
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -24,7 +25,7 @@ interface ApiService {
         @Field("password") password: String
     ): Call<RegisterResponse>
 
-    @GET("stories?location=1")
+    @GET("stories")
     fun getStories(
         @Header("Authorization") token: String
     ): Call<StoryResponse>
@@ -32,10 +33,8 @@ interface ApiService {
     @Multipart
     @POST("stories")
     fun addStories(
-        @Part("Content") Content: MultipartBody.Part,
         @Header("Authorization") token: String,
-        @Part("description") description: String,
-        @Part("lat") lat: Float,
-        @Part("lon") lon: Float,
+        @Part file: MultipartBody.Part,
+        @Part("description") description: RequestBody,
     ): Call<AddStoryResponse>
 }

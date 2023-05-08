@@ -4,6 +4,8 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Kuliah/Materi dan Tugas Kuliah/Semester6/Studi Independen Bangkit - Kampus Merdeka/Course/Intermediate/StoryAppSubmission/app/src/main/res/drawable/ic_baseline_email_24.xml" value="0.1" />
+        <entry key="..\:/Kuliah/Materi dan Tugas Kuliah/Semester6/Studi Independen Bangkit - Kampus Merdeka/Course/Intermediate/StoryAppSubmission/app/src/main/res/drawable/ic_baseline_image_24.xml" value="0.1" />
+        <entry key="..\:/Kuliah/Materi dan Tugas Kuliah/Semester6/Studi Independen Bangkit - Kampus Merdeka/Course/Intermediate/StoryAppSubmission/app/src/main/res/layout/activity_add_story.xml" value="0.264" />
         <entry key="..\:/Kuliah/Materi dan Tugas Kuliah/Semester6/Studi Independen Bangkit - Kampus Merdeka/Course/Intermediate/StoryAppSubmission/app/src/main/res/layout/activity_detail.xml" value="0.21784420289855072" />
         <entry key="..\:/Kuliah/Materi dan Tugas Kuliah/Semester6/Studi Independen Bangkit - Kampus Merdeka/Course/Intermediate/StoryAppSubmission/app/src/main/res/layout/activity_login2.xml" value="0.264" />
         <entry key="..\:/Kuliah/Materi dan Tugas Kuliah/Semester6/Studi Independen Bangkit - Kampus Merdeka/Course/Intermediate/StoryAppSubmission/app/src/main/res/layout/activity_main.xml" value="0.2" />
@@ -13,6 +15,7 @@
         <entry key="..\:/Kuliah/Materi dan Tugas Kuliah/Semester6/Studi Independen Bangkit - Kampus Merdeka/Course/Intermediate/StoryAppSubmission/app/src/main/res/layout/item_row_user.xml" value="0.27386934673366836" />
         <entry key="..\:/Kuliah/Materi dan Tugas Kuliah/Semester6/Studi Independen Bangkit - Kampus Merdeka/Course/Intermediate/StoryAppSubmission/app/src/main/res/menu/main_menu.xml" value="0.17685185185185184" />
         <entry key="..\:/Kuliah/Materi dan Tugas Kuliah/Semester6/Studi Independen Bangkit - Kampus Merdeka/Course/Intermediate/StoryAppSubmission/app/src/main/res/menu/story_menu.xml" value="0.264" />
+        <entry key="..\:/Kuliah/Materi dan Tugas Kuliah/Semester6/Studi Independen Bangkit - Kampus Merdeka/Course/Intermediate/StoryAppSubmission/app/src/main/res/xml/file_paths.xml" value="0.21784420289855072" />
       </map>
     </option>
   </component>

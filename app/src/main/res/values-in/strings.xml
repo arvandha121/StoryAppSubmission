@@ -20,4 +20,11 @@
     <string name="title_register_page">Halaman Register</string>
     <string name="message_login_page">Tolong masukkan akun!</string>
     <string name="message_register_page">Tolong registrasi akun!</string>
+    <string name="camera">Kamera</string>
+    <string name="gallery">Galeri</string>
+    <string name="upload">Unggah</string>
+    <string name="permission">Tidak mendapatkan permission.</string>
+    <string name="addStory">Tambah Story</string>
+    <string name="fill_in">Tolong diisi dahulu!</string>
+    <string name="choosePicture">Pilih Gambar</string>
 </resources>

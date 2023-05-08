@@ -7,7 +7,7 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class AddStoryResponse(
     @field:SerializedName("error")
-    val error: String? = null,
+    val error: Boolean? = null,
 
     @field:SerializedName("message")
     val message: String? = null

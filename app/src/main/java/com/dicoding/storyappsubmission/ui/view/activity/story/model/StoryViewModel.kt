@@ -1,4 +1,4 @@
-package com.dicoding.storyappsubmission.ui.view.activity.story
+package com.dicoding.storyappsubmission.ui.view.activity.story.model
 
 import android.content.ContentValues.TAG
 import android.util.Log
