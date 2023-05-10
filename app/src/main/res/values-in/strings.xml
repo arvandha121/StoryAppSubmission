@@ -25,6 +25,6 @@
     <string name="upload">Unggah</string>
     <string name="permission">Tidak mendapatkan permission.</string>
     <string name="addStory">Tambah Story</string>
-    <string name="fill_in">Tolong diisi dahulu!</string>
+    <string name="fill_in">diisi dahulu</string>
     <string name="choosePicture">Pilih Gambar</string>
 </resources>

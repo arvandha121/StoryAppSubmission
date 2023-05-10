@@ -5,6 +5,8 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.WindowInsets
 import android.view.WindowManager
@@ -13,6 +15,7 @@ import com.dicoding.storyappsubmission.R
 import com.dicoding.storyappsubmission.databinding.ActivityRegisterBinding
 import com.dicoding.storyappsubmission.remote.api.ApiConfig
 import com.dicoding.storyappsubmission.remote.response.register.RegisterResponse
+import com.dicoding.storyappsubmission.ui.custome.ButtonRegister
 import com.dicoding.storyappsubmission.ui.custome.EditTextEmail
 import com.dicoding.storyappsubmission.ui.custome.EditTextPassword
 import com.dicoding.storyappsubmission.ui.view.MainActivity
@@ -26,6 +29,11 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBinding
     private lateinit var email: EditTextEmail
     private lateinit var password: EditTextPassword
+    private lateinit var registerButton: ButtonRegister
+
+    private var isName: Boolean = true
+    private var isEmail: Boolean = false
+    private var isPassword: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,8 +42,10 @@ class RegisterActivity : AppCompatActivity() {
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.EditTextName
         email = binding.EditTextEmail
         password = binding.EditTextPassword
+        registerButton = binding.registerButton
 
         setupView()
 
@@ -55,7 +65,10 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun onClicked() {
-        binding.registerButton.setOnClickListener {
+        registerButtonEnable()
+        textEmail()
+        textPassword()
+        registerButton.setOnClickListener {
             onClickCallback()
         }
 
@@ -104,6 +117,46 @@ class RegisterActivity : AppCompatActivity() {
         })
     }
 
+    private fun registerButtonEnable() {
+        registerButton.isEnabled = isName && isEmail && isPassword
+    }
+
+    private fun textEmail() {
+        email.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                s?.isEmpty()
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                isEmail = !s.isNullOrEmpty() && emailRegex.matches(s.toString())
+                registerButtonEnable()
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+
+        })
+    }
+
+    private fun textPassword() {
+        password.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                s?.isEmpty()
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                isPassword = !s.isNullOrEmpty() && passwordRegex.matches(s.toString())
+                registerButtonEnable()
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+
+        })
+    }
+
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
@@ -114,5 +167,10 @@ class RegisterActivity : AppCompatActivity() {
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
         startActivity(intent)
         finish()
+    }
+
+    companion object {
+        val emailRegex: Regex = Regex("^\\w+([.-]?\\w+)*@\\w+([.-]?\\w+)*(\\.\\w{2,3})+\$")
+        val passwordRegex: Regex = Regex("^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{8,}\$")
     }
 }

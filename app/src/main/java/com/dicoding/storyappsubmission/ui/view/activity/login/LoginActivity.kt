@@ -6,6 +6,8 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.WindowInsets
 import android.view.WindowManager
@@ -20,6 +22,7 @@ import com.dicoding.storyappsubmission.remote.UserInstance
 import com.dicoding.storyappsubmission.remote.api.ApiConfig
 import com.dicoding.storyappsubmission.remote.response.login.Login
 import com.dicoding.storyappsubmission.remote.response.login.LoginResponse
+import com.dicoding.storyappsubmission.ui.custome.ButtonLogin
 import com.dicoding.storyappsubmission.ui.custome.EditTextEmail
 import com.dicoding.storyappsubmission.ui.custome.EditTextPassword
 import com.dicoding.storyappsubmission.ui.view.MainActivity
@@ -38,17 +41,12 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var email: EditTextEmail
     private lateinit var password: EditTextPassword
+    private lateinit var loginButton: ButtonLogin
 
     private lateinit var viewModel: LoginViewModel
 
     private var isEmail: Boolean = false
     private var isPassword: Boolean = false
-
-    companion object {
-        const val EMAIL = "email"
-        const val PASSWORD = "password"
-        const val TAG = "password"
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,6 +57,7 @@ class LoginActivity : AppCompatActivity() {
 
         email = binding.EditTextEmail
         password = binding.EditTextPassword
+        loginButton = binding.loginButton
 
         setupView()
 
@@ -87,13 +86,21 @@ class LoginActivity : AppCompatActivity() {
         supportActionBar?.hide()
     }
 
+    private fun loginButtonEnable() {
+        loginButton.isEnabled = isEmail && isPassword
+    }
+
     private fun onClicked() {
         viewModel = ViewModelProvider(
             this@LoginActivity,
             LoginViewModel.Factory(preferences = UserInstance.getInstance(dataStore))
         )[LoginViewModel::class.java]
 
-        binding.loginButton.setOnClickListener {
+        loginButtonEnable()
+        textEmail()
+        textPassword()
+
+        loginButton.setOnClickListener {
             val client = ApiConfig.getApiService().login(
                 email.text.toString(),
                 password.text.toString()
@@ -130,6 +137,40 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    private fun textEmail() {
+        email.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                s?.isEmpty()
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                isEmail = !s.isNullOrEmpty() && emailRegex.matches(s.toString())
+                loginButtonEnable()
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+        })
+    }
+
+    private fun textPassword() {
+        password.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                s?.isEmpty()
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                isPassword = !s.isNullOrEmpty() && passwordRegex.matches(s.toString())
+                loginButtonEnable()
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+        })
+    }
+
     private fun save(login: Login) {
         viewModel.saveToken(login.token as String)
         val intent = Intent(this@LoginActivity, StoryActivity::class.java)
@@ -148,5 +189,13 @@ class LoginActivity : AppCompatActivity() {
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
         startActivity(intent)
         finish()
+    }
+
+    companion object {
+        const val EMAIL = "email"
+        const val PASSWORD = "password"
+        val emailRegex: Regex = Regex("^\\w+([.-]?\\w+)*@\\w+([.-]?\\w+)*(\\.\\w{2,3})+\$")
+        val passwordRegex: Regex = Regex("^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{8,}\$")
+
     }
 }
