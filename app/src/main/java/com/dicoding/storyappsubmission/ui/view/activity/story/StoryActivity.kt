@@ -92,6 +92,40 @@ class StoryActivity : AppCompatActivity() {
         binding.storyActivity.adapter = adapter
     }
 
+    private fun logout() {
+        val dialogView = LayoutInflater
+            .from(this)
+            .inflate(R.layout.logout_popup, null)
+
+        val dialogBuilder = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .setTitle(getString(R.string.title_confirm))
+
+        val alertDialog = dialogBuilder.show()
+
+        dialogView.findViewById<Button>(R.id.btn_logout_yes).setOnClickListener {
+            // Tindakan saat tombol "Ya" ditekan
+            alertDialog.dismiss()
+
+            //Tambahkan kode untuk logout disini
+            val sharedPref = getSharedPreferences(MY_APP_PREFS, Context.MODE_PRIVATE)
+            val editor = sharedPref.edit()
+            val token = viewModel.saveToken("")
+            Intent(this@StoryActivity, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(this)
+                editor.remove(token.toString())
+                editor.apply()
+            }
+            Toast.makeText(this@StoryActivity, LOGOUT, Toast.LENGTH_SHORT).show()
+        }
+
+        dialogView.findViewById<Button>(R.id.btn_logout_no).setOnClickListener {
+            // Tindakan saat tombol "Tidak" ditekan
+            alertDialog.dismiss()
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.story_menu, menu)
         return super.onCreateOptionsMenu(menu)
@@ -100,37 +134,7 @@ class StoryActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.logoutButton -> {
-                val dialogView = LayoutInflater
-                    .from(this)
-                    .inflate(R.layout.logout_popup, null)
-
-                val dialogBuilder = AlertDialog.Builder(this)
-                    .setView(dialogView)
-                    .setTitle(getString(R.string.title_confirm))
-
-                val alertDialog = dialogBuilder.show()
-
-                dialogView.findViewById<Button>(R.id.btn_logout_yes).setOnClickListener {
-                    // Tindakan saat tombol "Ya" ditekan
-                    alertDialog.dismiss()
-
-                    //Tambahkan kode untuk logout disini
-                    val sharedPref = getSharedPreferences("MY_APP_PREFS", Context.MODE_PRIVATE)
-                    val editor = sharedPref.edit()
-                    val token = viewModel.saveToken("")
-                    Intent(this@StoryActivity, MainActivity::class.java).apply {
-                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        startActivity(this)
-                        editor.remove(token.toString())
-                        editor.apply()
-                    }
-                    Toast.makeText(this@StoryActivity, LOGOUT, Toast.LENGTH_SHORT).show()
-                }
-
-                dialogView.findViewById<Button>(R.id.btn_logout_no).setOnClickListener {
-                    // Tindakan saat tombol "Tidak" ditekan
-                    alertDialog.dismiss()
-                }
+                logout()
             }
         }
         return super.onOptionsItemSelected(item)
@@ -142,7 +146,12 @@ class StoryActivity : AppCompatActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        logout()
+    }
+
     companion object {
+        const val MY_APP_PREFS = "my_app_prefs"
         const val LOGOUT = "logout success"
     }
 }
