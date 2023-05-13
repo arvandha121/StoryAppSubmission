@@ -110,17 +110,25 @@ class LoginActivity : AppCompatActivity() {
                     val responseBody = response.body()
                     if (response.isSuccessful && responseBody != null) {
                         if (responseBody.error == true) {
-                            Toast.makeText(this@LoginActivity, responseBody.message, Toast.LENGTH_LONG)
-                                .show()
+                            Toast.makeText(
+                                this@LoginActivity,
+                                responseBody.message,
+                                Toast.LENGTH_LONG
+                            ).show()
                         } else {
                             save(responseBody.login as Login)
-                            Toast.makeText(this@LoginActivity, "Login Success", Toast.LENGTH_SHORT)
-                                .show()
+                            Toast.makeText(
+                                this@LoginActivity,
+                                "login "+responseBody.message,
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     } else {
-                        Log.e(ContentValues.TAG, "onFailure: ${response.message()}")
-                        Toast.makeText(this@LoginActivity, response.message(), Toast.LENGTH_LONG)
-                            .show()
+                        Toast.makeText(
+                            this@LoginActivity,
+                            response.message(),
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
                 }
 

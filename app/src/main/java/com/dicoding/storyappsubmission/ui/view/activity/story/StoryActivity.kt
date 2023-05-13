@@ -105,7 +105,7 @@ class StoryActivity : AppCompatActivity() {
                     editor.remove(token.toString())
                     editor.apply()
                 }
-                Toast.makeText(this@StoryActivity, "Logout Success", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@StoryActivity, LOGOUT, Toast.LENGTH_SHORT).show()
             }
         }
         return super.onOptionsItemSelected(item)
@@ -115,5 +115,9 @@ class StoryActivity : AppCompatActivity() {
         binding.addButton.setOnClickListener {
             startActivity(Intent(this, AddStoryActivity::class.java))
         }
+    }
+
+    companion object {
+        const val LOGOUT = "logout success"
     }
 }
