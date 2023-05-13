@@ -27,4 +27,8 @@
     <string name="addStory">Tambah Story</string>
     <string name="fill_in">diisi dahulu</string>
     <string name="choosePicture">Pilih Gambar</string>
+    <string name="confirm">Apakah Anda yakin ingin keluar?</string>
+    <string name="yes">iya</string>
+    <string name="no">tidak</string>
+    <string name="title_confirm">Konfirmasi Logout</string>
 </resources>
