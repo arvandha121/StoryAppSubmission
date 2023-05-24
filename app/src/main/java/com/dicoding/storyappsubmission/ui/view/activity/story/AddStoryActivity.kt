@@ -1,5 +1,6 @@
 package com.dicoding.storyappsubmission.ui.view.activity.story
 
+import android.Manifest
 import android.content.Intent
 import android.content.Intent.ACTION_GET_CONTENT
 import android.content.pm.PackageManager
@@ -34,6 +35,9 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
+import android.location.Location
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 
 class AddStoryActivity : AppCompatActivity() {
 
@@ -41,6 +45,9 @@ class AddStoryActivity : AppCompatActivity() {
     private lateinit var viewModel: AddStoryViewModel
     private lateinit var currentPhotoPath: String
     private var getFile: File? = null
+
+    private lateinit var location: Location
+    private lateinit var fusedLocation: FusedLocationProviderClient
 
     fun String?.generateToken(): String? = if (!this.isNullOrEmpty()) "Bearer $this" else null
     private val pref = UserInstance.getInstance(dataStore)
@@ -67,6 +74,23 @@ class AddStoryActivity : AppCompatActivity() {
             binding.imagePreview.setImageURI(selectedImg)
         }
     }
+
+    private val requestPermissionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { Maps ->
+            when {
+                Maps.get(Manifest.permission.ACCESS_FINE_LOCATION) ?: false -> {
+                    getMyLastLocation()
+                }
+                Maps.get(Manifest.permission.ACCESS_COARSE_LOCATION) ?: false -> {
+                    getMyLastLocation()
+                }
+                else -> {
+                    Maps.getValue(getString(0))
+                }
+            }
+        }
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -123,6 +147,8 @@ class AddStoryActivity : AppCompatActivity() {
         })
 
         onClicked()
+        fusedLocation = LocationServices.getFusedLocationProviderClient(this)
+        getMyLastLocation()
     }
 
     private fun Permission() {
@@ -178,12 +204,14 @@ class AddStoryActivity : AppCompatActivity() {
                 file.name,
                 requestImageFile
             )
+            val lat = location.latitude.toFloat()
+            val long = location.longitude.toFloat()
 
             viewModel.getToken().observe(
                 this
             ) { token: String ->
                 val service = ApiConfig.getApiService()
-                    .addStories("Bearer $token", imageMultipart, description)
+                    .addStories("Bearer $token", imageMultipart, description, lat, long)
                 service.enqueue(object : Callback<AddStoryResponse> {
                     override fun onResponse(
                         call: Call<AddStoryResponse>,
@@ -230,6 +258,68 @@ class AddStoryActivity : AppCompatActivity() {
         startActivity(Intent(this, StoryActivity::class.java))
         finish()
     }
+
+    private fun checkPermission(permission: String): Boolean {
+        return ContextCompat.checkSelfPermission(
+            this,
+            permission
+        ) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun getMyLastLocation() {
+        if (checkPermission(Manifest.permission.ACCESS_FINE_LOCATION) &&
+            checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
+        ){
+            fusedLocation.lastLocation.addOnSuccessListener { locs: Location? ->
+                if (locs != null) {
+                    location = locs
+                } else {
+                    Toast.makeText(
+                        this@AddStoryActivity,
+                        "Location is not found. Try Again",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        } else {
+            requestPermissionLauncher.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
+        }
+    }
+
+//    private fun getMyLastLocation() {
+//        if (ActivityCompat.checkSelfPermission(
+//                this,
+//                Manifest.permission.ACCESS_FINE_LOCATION
+//            ) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+//                this,
+//                Manifest.permission.ACCESS_COARSE_LOCATION
+//            ) == PackageManager.PERMISSION_GRANTED
+//        ) {
+//            fusedLocation.lastLocation.addOnSuccessListener {
+//                if (it != null) {
+//                    location = it
+//                } else {
+//                    Toast.makeText(
+//                        this@AddStoryActivity,
+//                        getString(R.string.location),
+//                        Toast.LENGTH_SHORT
+//                    ).show()
+//                }
+//            }
+//        } else {
+//            requestPermissionLauncher.launch(
+//                arrayOf(
+//                    Manifest.permission.ACCESS_FINE_LOCATION,
+//                    Manifest.permission.ACCESS_COARSE_LOCATION
+//                )
+//            )
+//        }
+//    }
 
     companion object {
         const val FAILED = "failed"

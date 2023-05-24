@@ -13,6 +13,7 @@
     <string name="email">Alamat</string>
     <string name="password">Kata Sandi</string>
     <string name="signup">Daftar</string>
+    <string name="mapButton">Maps</string>
     <string name="logoutButton">Keluar</string>
     <string name="registerquestion">Tidak punya akun ?</string>
     <string name="loginquestion">Punya akun ?</string>
@@ -31,4 +32,6 @@
     <string name="yes">iya</string>
     <string name="no">tidak</string>
     <string name="title_confirm">Konfirmasi Logout</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="location">Lokasi tidak ditemukan. Silahkan coba lagi.</string>
 </resources>

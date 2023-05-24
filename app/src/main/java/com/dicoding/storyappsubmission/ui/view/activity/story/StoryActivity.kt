@@ -23,6 +23,7 @@ import com.dicoding.storyappsubmission.remote.UserInstance
 import com.dicoding.storyappsubmission.remote.response.story.getstory.ListStory
 import com.dicoding.storyappsubmission.ui.view.MainActivity
 import com.dicoding.storyappsubmission.ui.view.activity.login.LoginActivity
+import com.dicoding.storyappsubmission.ui.view.activity.maps.MapsActivity
 import com.dicoding.storyappsubmission.ui.view.activity.story.adapter.StoryAdapter
 import com.dicoding.storyappsubmission.ui.view.activity.story.model.StoryViewModel
 
@@ -92,6 +93,16 @@ class StoryActivity : AppCompatActivity() {
         binding.storyActivity.adapter = adapter
     }
 
+    private fun maps() {
+        startActivity(
+            Intent(
+                this@StoryActivity,
+                MapsActivity::class.java
+            ).apply {
+                putExtra(LIST_STORY, listStory)
+        })
+    }
+
     private fun logout() {
         val dialogView = LayoutInflater
             .from(this)
@@ -133,6 +144,10 @@ class StoryActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.mapButton -> {
+                maps()
+                return true
+            }
             R.id.logoutButton -> {
                 logout()
             }
@@ -153,5 +168,6 @@ class StoryActivity : AppCompatActivity() {
     companion object {
         const val MY_APP_PREFS = "my_app_prefs"
         const val LOGOUT = "logout success"
+        const val LIST_STORY = "list_story"
     }
 }

@@ -88,6 +88,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun loginButtonEnable() {
         loginButton.isEnabled = isEmail && isPassword
+        loginButton.isEnabled = isEmail && isPassword
     }
 
     private fun onClicked() {

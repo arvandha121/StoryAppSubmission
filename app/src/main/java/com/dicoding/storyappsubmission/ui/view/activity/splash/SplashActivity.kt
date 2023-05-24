@@ -54,14 +54,8 @@ class SplashActivity : AppCompatActivity() {
                     )
                     finish()
                 }, 3000)
-            }
-            else {
-                Handler(Looper.getMainLooper()).postDelayed({
-                    startActivity(
-                        Intent(this, StoryActivity::class.java)
-                    )
-                    finish()
-                }, 3000)
+            } else {
+                startActivity(Intent(this, StoryActivity::class.java))
             }
         }
     }

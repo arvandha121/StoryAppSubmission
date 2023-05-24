@@ -3,6 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/mapButton"
+        android:title="@string/mapButton"
+        android:icon="@drawable/ic_baseline_map_24"
+        app:showAsAction="collapseActionView|always"/>
+    <item
         android:id="@+id/logoutButton"
         android:title="@string/logoutButton"
         android:icon="@drawable/ic_baseline_logout_24"
