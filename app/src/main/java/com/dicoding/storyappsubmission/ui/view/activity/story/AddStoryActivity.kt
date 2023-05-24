@@ -259,24 +259,22 @@ class AddStoryActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun checkPermission(permission: String): Boolean {
-        return ContextCompat.checkSelfPermission(
-            this,
-            permission
-        ) == PackageManager.PERMISSION_GRANTED
-    }
-
     private fun getMyLastLocation() {
-        if (checkPermission(Manifest.permission.ACCESS_FINE_LOCATION) &&
-            checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
-        ){
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
             fusedLocation.lastLocation.addOnSuccessListener { locs: Location? ->
                 if (locs != null) {
                     location = locs
                 } else {
                     Toast.makeText(
                         this@AddStoryActivity,
-                        "Location is not found. Try Again",
+                        getString(R.string.location),
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -290,36 +288,6 @@ class AddStoryActivity : AppCompatActivity() {
             )
         }
     }
-
-//    private fun getMyLastLocation() {
-//        if (ActivityCompat.checkSelfPermission(
-//                this,
-//                Manifest.permission.ACCESS_FINE_LOCATION
-//            ) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-//                this,
-//                Manifest.permission.ACCESS_COARSE_LOCATION
-//            ) == PackageManager.PERMISSION_GRANTED
-//        ) {
-//            fusedLocation.lastLocation.addOnSuccessListener {
-//                if (it != null) {
-//                    location = it
-//                } else {
-//                    Toast.makeText(
-//                        this@AddStoryActivity,
-//                        getString(R.string.location),
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-//                }
-//            }
-//        } else {
-//            requestPermissionLauncher.launch(
-//                arrayOf(
-//                    Manifest.permission.ACCESS_FINE_LOCATION,
-//                    Manifest.permission.ACCESS_COARSE_LOCATION
-//                )
-//            )
-//        }
-//    }
 
     companion object {
         const val FAILED = "failed"
