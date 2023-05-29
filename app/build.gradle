@@ -7,6 +7,7 @@ plugins {
 
 android {
     compileSdk 33
+    namespace 'com.dicoding.storyappsubmission'
 
     defaultConfig {
         applicationId "com.dicoding.storyappsubmission"
@@ -14,7 +15,6 @@ android {
         targetSdk 33
         versionCode 1
         versionName "1.0"
-        namespace 'com.dicoding.storyappsubmission'
 
         buildConfigField "String", "URL", '"https://story-api.dicoding.dev/v1/"'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
