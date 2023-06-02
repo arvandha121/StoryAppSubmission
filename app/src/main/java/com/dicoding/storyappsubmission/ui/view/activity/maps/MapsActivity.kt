@@ -26,7 +26,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
-    private lateinit var listStory: ArrayList<ListStory>
+    private var listStory: ArrayList<ListStory> = ArrayList()
 
     private val requestPermissionLauncher =
         registerForActivityResult(

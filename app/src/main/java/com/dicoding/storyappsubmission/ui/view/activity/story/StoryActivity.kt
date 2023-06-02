@@ -8,23 +8,25 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat.startActivity
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.dicoding.storyappsubmission.R
 import com.dicoding.storyappsubmission.databinding.ActivityStoryBinding
 import com.dicoding.storyappsubmission.remote.UserInstance
+import com.dicoding.storyappsubmission.ui.view.activity.story.adapter.StoryListAdapter
 import com.dicoding.storyappsubmission.remote.response.story.getstory.ListStory
 import com.dicoding.storyappsubmission.ui.view.MainActivity
 import com.dicoding.storyappsubmission.ui.view.activity.login.LoginActivity
 import com.dicoding.storyappsubmission.ui.view.activity.maps.MapsActivity
-import com.dicoding.storyappsubmission.ui.view.activity.story.adapter.StoryAdapter
+import com.dicoding.storyappsubmission.ui.view.activity.story.adapter.LoadingAdapter
 import com.dicoding.storyappsubmission.ui.view.activity.story.model.StoryViewModel
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
@@ -34,7 +36,7 @@ class StoryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityStoryBinding
 
     private lateinit var viewModel: StoryViewModel
-    private lateinit var listStory: ArrayList<ListStory>
+    private var listStory: ArrayList<ListStory> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,15 +56,26 @@ class StoryActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(
             this@StoryActivity,
-            StoryViewModel.Factory(preferences)
+            StoryViewModel.Factory(preferences, this)
         )[StoryViewModel::class.java]
 
-        viewModel.getToken().observe(this) {
+        val adapter: StoryListAdapter = StoryListAdapter()
+        binding.storyActivity.adapter = adapter.withLoadStateFooter(
+            footer = LoadingAdapter {
+                adapter.retry()
+            }
+        )
+
+        binding.storyActivity.layoutManager = LinearLayoutManager(this)
+
+        viewModel.getToken().observe(this) { it ->
             if (it.isEmpty()) {
                 startActivity(Intent(this@StoryActivity, LoginActivity::class.java))
                 finish()
             } else {
-                viewModel.getStory(it)
+                viewModel.getStory(it).observe(this) {
+                    adapter.submitData(lifecycle, it)
+                }
             }
         }
 
@@ -89,7 +102,7 @@ class StoryActivity : AppCompatActivity() {
     }
 
     private fun adapter() {
-        val adapter: StoryAdapter = StoryAdapter(listStory)
+        val adapter = StoryListAdapter()
         binding.storyActivity.adapter = adapter
     }
 

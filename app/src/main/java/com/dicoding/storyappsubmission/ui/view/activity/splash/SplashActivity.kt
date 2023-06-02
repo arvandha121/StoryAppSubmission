@@ -43,7 +43,7 @@ class SplashActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(
             this,
-            StoryViewModel.Factory(preferences)
+            StoryViewModel.Factory(preferences, this)
         )[StoryViewModel::class.java]
 
         viewModel.getToken().observe(this) {
