@@ -10,7 +10,7 @@ import com.dicoding.storyappsubmission.remote.response.story.getstory.ListStory
 class DetailActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityDetailBinding
-
+    private lateinit var story: ListStory
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,7 +21,6 @@ class DetailActivity : AppCompatActivity() {
 
         supportActionBar?.hide()
 
-        var story: ListStory = ListStory()
         story = intent.getParcelableExtra<ListStory>("stories") as ListStory
         Glide.with(applicationContext)
             .load(story.photoUrl)

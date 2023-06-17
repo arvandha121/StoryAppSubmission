@@ -6,12 +6,18 @@ import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import com.dicoding.storyappsubmission.R
 import com.dicoding.storyappsubmission.databinding.ActivityMapsBinding
+import com.dicoding.storyappsubmission.remote.UserInstance
 import com.dicoding.storyappsubmission.remote.response.story.getstory.ListStory
+import com.dicoding.storyappsubmission.ui.view.activity.maps.model.MapsViewModel
 import com.dicoding.storyappsubmission.ui.view.activity.story.StoryActivity
+import com.dicoding.storyappsubmission.ui.view.activity.story.StoryActivity.Companion.LIST_STORY
+import com.dicoding.storyappsubmission.ui.view.activity.story.dataStore
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -26,7 +32,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
-    private var listStory: ArrayList<ListStory> = ArrayList()
+    private lateinit var listStory: ArrayList<ListStory>
+    private lateinit var mapsViewModel: MapsViewModel
 
     private val requestPermissionLauncher =
         registerForActivityResult(
@@ -43,8 +50,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         binding = ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        listStory =
-            intent.getParcelableArrayListExtra<ListStory>(StoryActivity.LIST_STORY) as ArrayList<ListStory>
+        val preferences = UserInstance.getInstance(dataStore)
+        mapsViewModel = ViewModelProvider(
+            this,
+            MapsViewModel.Factory(preferences, this)
+        )[MapsViewModel::class.java]
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
@@ -83,19 +93,28 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun addLocationListStory() {
-        for (story in listStory) {
-            if (story.lat != null && story.lon != null) {
-                val position = LatLng(story.lat, story.lon)
-                mMap.addMarker(
-                    MarkerOptions()
-                        .position(position)
-                        .title(story.name)
-                        .snippet(story.description)
-                )
+
+        mapsViewModel.getToken().observe(this) {
+            if (it.isNotEmpty()) {
+                mapsViewModel.getLocation(it)
             }
         }
-        val firstLocation = LatLng(listStory.get(0).lat as Double, listStory.get(0).lon as Double)
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(firstLocation, 15f))
+
+        mapsViewModel.listStory.observe(this) {listStories ->
+            for (story in listStories) {
+                if (story.lat != null && story.lon != null) {
+                    val position = LatLng(story.lat, story.lon)
+                    mMap.addMarker(
+                        MarkerOptions()
+                            .position(position)
+                            .title(story.name)
+                            .snippet(story.description)
+                    )
+                }
+            }
+            val firstLocation = LatLng(listStories[0].lat as Double, listStories[0].lon as Double)
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(firstLocation, 15f))
+        }
     }
 
     private fun mapLocation() {

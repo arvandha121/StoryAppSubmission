@@ -8,12 +8,10 @@ import com.dicoding.storyappsubmission.remote.UserInstance
 import com.dicoding.storyappsubmission.remote.api.ApiService
 import com.dicoding.storyappsubmission.remote.response.story.getstory.ListStory
 
-class StoryPagingSource(private val preferences: String, private val apiService: ApiService) :
-    PagingSource<Int, ListStory>() {
-    private companion object {
-        const val INITIAL_PAGE_INDEX = 1
-    }
-
+class StoryPagingSource(
+    private val preferences: String,
+    private val apiService: ApiService
+) : PagingSource<Int, ListStory>() {
     override fun getRefreshKey(state: PagingState<Int, ListStory>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             val anchorPage = state.closestPageToPosition(anchorPosition)
@@ -25,7 +23,7 @@ class StoryPagingSource(private val preferences: String, private val apiService:
         return try {
             val position = params.key ?: INITIAL_PAGE_INDEX
             val token = preferences
-            Log.d("Token", token.toString())
+            Log.d("Token", "bearer $token")
             val responseData = apiService.getStory(
                 "bearer $token",
                 position,
@@ -40,6 +38,10 @@ class StoryPagingSource(private val preferences: String, private val apiService:
         } catch (exception: Exception) {
             return LoadResult.Error(exception)
         }
+    }
+
+    private companion object {
+        const val INITIAL_PAGE_INDEX = 1
     }
 
 }

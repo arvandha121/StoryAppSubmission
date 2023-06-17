@@ -25,11 +25,6 @@ interface ApiService {
         @Field("password") password: String
     ): Call<RegisterResponse>
 
-    @GET("stories?location=1")
-    fun getStories(
-        @Header("Authorization") token: String
-    ): Call<StoryResponse>
-
     @Multipart
     @POST("stories")
     fun addStories(
@@ -39,6 +34,11 @@ interface ApiService {
         @Part("lat") lat: Float,
         @Part("lon") lon: Float
     ): Call<AddStoryResponse>
+
+    @GET("stories?location=1")
+    fun getStories(
+        @Header("Authorization") token: String
+    ): StoryResponse
 
     @GET("stories")
     suspend fun getStory(

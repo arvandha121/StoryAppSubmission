@@ -36,7 +36,9 @@ class StoryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityStoryBinding
 
     private lateinit var viewModel: StoryViewModel
-    private var listStory: ArrayList<ListStory> = ArrayList()
+    private lateinit var listStory: ArrayList<ListStory>
+//    private var listStory: ArrayList<ListStory> = ArrayList()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,20 +61,19 @@ class StoryActivity : AppCompatActivity() {
             StoryViewModel.Factory(preferences, this)
         )[StoryViewModel::class.java]
 
-        val adapter: StoryListAdapter = StoryListAdapter()
-        binding.storyActivity.adapter = adapter.withLoadStateFooter(
-            footer = LoadingAdapter {
-                adapter.retry()
-            }
-        )
-
-        binding.storyActivity.layoutManager = LinearLayoutManager(this)
-
         viewModel.getToken().observe(this) { it ->
             if (it.isEmpty()) {
                 startActivity(Intent(this@StoryActivity, LoginActivity::class.java))
                 finish()
             } else {
+                binding.storyActivity.layoutManager = LinearLayoutManager(this)
+                val adapter = StoryListAdapter()
+                binding.storyActivity.adapter = adapter.withLoadStateFooter(
+                    footer = LoadingAdapter {
+                        adapter.retry()
+                    }
+                )
+
                 viewModel.getStory(it).observe(this) {
                     adapter.submitData(lifecycle, it)
                 }
@@ -107,13 +108,15 @@ class StoryActivity : AppCompatActivity() {
     }
 
     private fun maps() {
-        startActivity(
-            Intent(
-                this@StoryActivity,
-                MapsActivity::class.java
-            ).apply {
-                putExtra(LIST_STORY, listStory)
-        })
+//        startActivity(
+//            Intent(
+//                this@StoryActivity,
+//                MapsActivity::class.java
+//            ).apply {
+//                putExtra(LIST_STORY, listStory)
+//        })
+
+        startActivity(Intent(this@StoryActivity, MapsActivity::class.java))
     }
 
     private fun logout() {

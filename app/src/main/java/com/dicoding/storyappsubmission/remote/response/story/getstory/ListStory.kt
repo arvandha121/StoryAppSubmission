@@ -1,13 +1,17 @@
 package com.dicoding.storyappsubmission.remote.response.story.getstory
 
 import android.os.Parcelable
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
+@Entity(tableName = "stories")
 data class ListStory(
+    @PrimaryKey
     @field:SerializedName("id")
-    val id: String? = null,
+    val id: String,
 
     @field:SerializedName("name")
     val name: String? = null,
@@ -21,9 +25,9 @@ data class ListStory(
     @field:SerializedName("createdAt")
     val createdAt: String? = null,
 
-    @field:SerializedName("lat")
-    val lat: Double? = null,
-
     @field:SerializedName("lon")
     val lon: Double? = null,
+
+    @field:SerializedName("lat")
+    val lat: Double? = null
 ) : Parcelable
