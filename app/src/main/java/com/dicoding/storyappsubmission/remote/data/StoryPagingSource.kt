@@ -1,10 +1,9 @@
 package com.dicoding.storyappsubmission.remote.data
 
-import android.media.session.MediaSession.Token
 import android.util.Log
+import androidx.paging.PagingData
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.dicoding.storyappsubmission.remote.UserInstance
 import com.dicoding.storyappsubmission.remote.api.ApiService
 import com.dicoding.storyappsubmission.remote.response.story.getstory.ListStory
 
@@ -40,7 +39,10 @@ class StoryPagingSource(
         }
     }
 
-    private companion object {
+    companion object {
+        fun snapshot(items: List<ListStory>): PagingData<ListStory> {
+            return PagingData.from(items)
+        }
         const val INITIAL_PAGE_INDEX = 1
     }
 

@@ -30,7 +30,7 @@ class ButtonLogin : AppCompatButton {
         init()
     }
 
-    override fun onDraw(canvas: Canvas?) {
+    override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         background = if (isEnabled) {
             enable

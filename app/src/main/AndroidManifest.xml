@@ -43,7 +43,7 @@
             android:value="AIzaSyA5tWLZoueTv7V7D-qMRbhKUHyuhegjyLk" />
 
         <activity
-            android:name=".ui.view.activity.maps.MapsActivity"
+            android:name=".ui.auth.activity.maps.MapsActivity"
             android:exported="false"
             android:label="@string/title_activity_maps" />
 
@@ -58,16 +58,16 @@
         </provider>
 
         <activity
-            android:name=".ui.view.activity.story.AddStoryActivity"
+            android:name=".ui.auth.activity.story.AddStoryActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.view.activity.detail.DetailActivity"
+            android:name=".ui.auth.activity.detail.DetailActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.view.activity.story.StoryActivity"
+            android:name=".ui.auth.activity.story.StoryActivity"
             android:exported="true" />
         <activity
-            android:name=".ui.view.activity.splash.SplashActivity"
+            android:name=".ui.auth.activity.splash.SplashActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
@@ -78,13 +78,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.view.activity.register.RegisterActivity"
+            android:name=".ui.auth.activity.register.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.view.activity.login.LoginActivity"
+            android:name=".ui.auth.activity.login.LoginActivity"
             android:exported="false" />
         <activity
-            android:name="com.dicoding.storyappsubmission.ui.view.MainActivity"
+            android:name="com.dicoding.storyappsubmission.ui.auth.MainActivity"
             android:exported="false" />
     </application>
 

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.view.activity.story.StoryActivity">
+    tools:context=".ui.auth.activity.story.StoryActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/story_Activity"

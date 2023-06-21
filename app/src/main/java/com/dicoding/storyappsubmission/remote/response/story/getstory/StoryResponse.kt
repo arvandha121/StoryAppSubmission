@@ -4,6 +4,7 @@ import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class StoryResponse (
     @field:SerializedName("error")
     val error: Boolean? = null,
@@ -13,4 +14,4 @@ data class StoryResponse (
 
     @field:SerializedName("listStory")
     val listStory: List<ListStory?>? = null
-)
+) : Parcelable
