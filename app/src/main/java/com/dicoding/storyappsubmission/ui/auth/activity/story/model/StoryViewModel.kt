@@ -1,8 +1,6 @@
 package com.dicoding.storyappsubmission.ui.auth.activity.story.model
 
-import android.content.ContentValues.TAG
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.*
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
@@ -28,15 +26,7 @@ class StoryViewModel(
         return token
     }
 
-    fun getStory(token: String): LiveData<PagingData<ListStory>> {
-        val stories = storyRepository.getStory(token).cachedIn(viewModelScope)
-        stories.observeForever { pagingData ->
-            if (pagingData != null) {
-                Log.e(TAG, "OnFailure")
-            }
-        }
-        return stories
-    }
+    fun getStory(token: String): LiveData<PagingData<ListStory>> = storyRepository.getStory(token).cachedIn(viewModelScope)
 
     class Factory(private val preferences: UserInstance, private val context: Context) :
         ViewModelProvider.NewInstanceFactory() {
