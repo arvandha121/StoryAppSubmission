@@ -44,7 +44,7 @@ class StoryRemoteMediator(
                 token,
                 page,
                 state.config.pageSize,
-                1
+                0
             ).listStory as List<ListStory>
             val endOfPaginationReached = responseData.isEmpty()
 

@@ -9,18 +9,21 @@ import androidx.test.filters.MediumTest
 import com.dicoding.storyappsubmission.data.Dummy
 import com.dicoding.storyappsubmission.data.MainCoroutineRule
 import com.dicoding.storyappsubmission.data.getOrAwaitValue
+import com.dicoding.storyappsubmission.remote.UserInstance
 import com.dicoding.storyappsubmission.remote.data.StoryPagingSource
+import com.dicoding.storyappsubmission.remote.data.StoryRepository
 import com.dicoding.storyappsubmission.remote.response.story.getstory.ListStory
 import com.dicoding.storyappsubmission.ui.auth.activity.story.adapter.StoryListAdapter
-import com.dicoding.storyappsubmission.ui.auth.activity.story.model.StoryViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
+import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
@@ -35,7 +38,15 @@ class StoryViewModelTest {
     var mainCoroutineRules = MainCoroutineRule()
 
     @Mock
-    private lateinit var viewModel: StoryViewModel
+    private lateinit var preferences: UserInstance
+    private lateinit var storyRepository: StoryRepository
+    private val token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ1c2VyLXN2Y3hLc1RFN1hOVklXRWIiLCJpYXQiOjE2ODczNjMwNjZ9.SrWGCV-QBuQQ5Q6ZDgIWlWaE2uo3uk2YZqg6tGCiAGo"
+
+    @Before
+    fun setup() {
+        storyRepository = mock(StoryRepository::class.java)
+        preferences = mock(UserInstance::class.java)
+    }
 
     @Test
     @MediumTest
@@ -45,13 +56,12 @@ class StoryViewModelTest {
         val story = MutableLiveData<PagingData<ListStory>>().apply {
             value = data
         }
-        val token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ1c2VyLXN2Y3hLc1RFN1hOVklXRWIiLCJpYXQiOjE2ODczNjMwNjZ9.SrWGCV-QBuQQ5Q6ZDgIWlWaE2uo3uk2YZqg6tGCiAGo"
 
         // Mock the behavior of viewModel.getStory(token)
-        `when`(viewModel.getStory(token)).thenReturn(story)
+        `when`(storyRepository.getStory(token)).thenReturn(story)
 
         // Call the method under test
-        val actualStory = viewModel.getStory(token).getOrAwaitValue()
+        val actualStory = storyRepository.getStory(token).getOrAwaitValue()
 
         val differ = AsyncPagingDataDiffer(
             diffCallback = StoryListAdapter.DIFF_CALLBACK,
@@ -64,7 +74,7 @@ class StoryViewModelTest {
 
         advanceUntilIdle()
 
-        verify(viewModel).getStory(token)
+        verify(storyRepository).getStory(token)
 
         val snapshot = differ.snapshot()
         Assert.assertNotNull(differ.snapshot())
@@ -80,9 +90,9 @@ class StoryViewModelTest {
 
     @Test
     fun `when Get Token Not Null`() = mainCoroutineRules.runBlockingTest {
-        val expectedToken = MutableLiveData<String>()
-        `when`(viewModel.getToken).thenReturn(expectedToken)
-        val actualToken = viewModel.getToken
+        val expectedToken = MutableLiveData<PagingData<ListStory>>()
+        `when`(storyRepository.getStory(token)).thenReturn(expectedToken)
+        val actualToken = storyRepository.getStory(token)
         Assert.assertNotNull(actualToken)
         Assert.assertEquals(expectedToken, actualToken)
     }
@@ -98,11 +108,10 @@ class StoryViewModelTest {
     // save token still need fixes
     @Test
     fun `when Save Token Is Sucess and Not Null`() = mainCoroutineRules.runBlockingTest {
-        val token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ1c2VyLXN2Y3hLc1RFN1hOVklXRWIiLCJpYXQiOjE2ODczNjMwNjZ9.SrWGCV-QBuQQ5Q6ZDgIWlWaE2uo3uk2YZqg6tGCiAGo"
-        val expectedToken = token
-        `when`(viewModel.saveToken(token)).thenReturn(expectedToken)
+        val expectedToken = MutableLiveData<PagingData<ListStory>>()
+        `when`(storyRepository.getStory(token)).thenReturn(expectedToken)
 
-        val actualToken = viewModel.saveToken(token)
+        val actualToken = storyRepository.getStory(token)
         Assert.assertNotNull(actualToken)
         Assert.assertEquals(expectedToken, actualToken)
     }

@@ -27,7 +27,7 @@ class StoryPagingSource(
                 "bearer $token",
                 position,
                 params.loadSize,
-                1
+                0
             ).listStory as List<ListStory>
             LoadResult.Page(
                 data = responseData,
