@@ -1,14 +1,17 @@
 package com.dicoding.storyappsubmission.ui.auth.activity.story
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.datastore.core.DataStore
@@ -17,6 +20,8 @@ import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.dicoding.storyappsubmission.R
 import com.dicoding.storyappsubmission.databinding.ActivityStoryBinding
 import com.dicoding.storyappsubmission.remote.UserInstance
@@ -34,20 +39,85 @@ class StoryActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityStoryBinding
 
+    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var progressView: ProgressBar
+
     private lateinit var viewModel: StoryViewModel
     private lateinit var listStory: ArrayList<ListStory>
 
+    @SuppressLint("InflateParams")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_story)
 
         binding = ActivityStoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        supportActionBar?.title = getString(R.string.story)
+        supportActionBars()
 
+        setupSwipeRefreshLayout()
         viewModel()
         onClicked()
+    }
+
+    private fun supportActionBars() {
+        val customActionBar = layoutInflater.inflate(R.layout.custom_action_bar, null)
+        supportActionBar?.setDisplayShowCustomEnabled(true)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        supportActionBar?.customView = customActionBar
+
+        val titleButton = customActionBar.findViewById<Button>(R.id.titleButton)
+        recyclerView = binding.storyActivity
+
+        titleButton.setOnClickListener {
+            // Kode aksi yang dijalankan saat tombol title di klik
+            recyclerView.smoothScrollToPosition(0)
+            Toast.makeText(this, "Back to up", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun setupSwipeRefreshLayout() {
+        swipeRefreshLayout = binding.swipeRefresh
+
+        swipeRefreshLayout.setOnRefreshListener {
+            swipeRefreshLayout.isRefreshing = true
+
+            Handler(mainLooper).postDelayed({
+                viewModelRefreshLayout()
+            }, 2000)
+        }
+    }
+
+    private fun viewModelRefreshLayout() {
+        val preferences = UserInstance.getInstance(dataStore)
+        swipeRefreshLayout.isRefreshing = false
+        viewModel = ViewModelProvider(
+            this@StoryActivity,
+            StoryViewModel.Factory(preferences, this)
+        )[StoryViewModel::class.java]
+
+        viewModel.getToken.observe(this) { it ->
+            if (it.isEmpty()) {
+                startActivity(Intent(this@StoryActivity, LoginActivity::class.java))
+                finish()
+            } else {
+                binding.storyActivity.layoutManager = LinearLayoutManager(this)
+                val adapter = StoryListAdapter()
+                binding.storyActivity.adapter = adapter.withLoadStateFooter(
+                    footer = LoadingAdapter {
+                        adapter.retry()
+                    }
+                )
+
+                viewModel.getStory(it).observe(this) {
+                    adapter.submitData(lifecycle, it)
+                }
+            }
+        }
+
+        viewModel.listStory.observe(this) {
+            recyclerView(it)
+        }
     }
 
     private fun viewModel() {
@@ -120,20 +190,22 @@ class StoryActivity : AppCompatActivity() {
         val alertDialog = dialogBuilder.show()
 
         dialogView.findViewById<Button>(R.id.btn_logout_yes).setOnClickListener {
-            // Tindakan saat tombol "Ya" ditekan
-            alertDialog.dismiss()
+            Handler(mainLooper).postDelayed({
+                // Tindakan saat tombol "Ya" ditekan
+                alertDialog.dismiss()
 
-            //Tambahkan kode untuk logout disini
-            val sharedPref = getSharedPreferences(MY_APP_PREFS, Context.MODE_PRIVATE)
-            val editor = sharedPref.edit()
-            val token = viewModel.saveToken("")
-            Intent(this@StoryActivity, MainActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(this)
-                editor.remove(token.toString())
-                editor.apply()
-            }
-            Toast.makeText(this@StoryActivity, LOGOUT, Toast.LENGTH_SHORT).show()
+                //Tambahkan kode untuk logout disini
+                val sharedPref = getSharedPreferences(MY_APP_PREFS, Context.MODE_PRIVATE)
+                val editor = sharedPref.edit()
+                val token = viewModel.saveToken("")
+                Intent(this@StoryActivity, MainActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    startActivity(this)
+                    editor.remove(token.toString())
+                    editor.apply()
+                }
+                Toast.makeText(this@StoryActivity, LOGOUT, Toast.LENGTH_SHORT).show()
+            }, 2000)
         }
 
         dialogView.findViewById<Button>(R.id.btn_logout_no).setOnClickListener {
@@ -153,6 +225,7 @@ class StoryActivity : AppCompatActivity() {
                 maps()
                 return true
             }
+
             R.id.logoutButton -> {
                 logout()
             }

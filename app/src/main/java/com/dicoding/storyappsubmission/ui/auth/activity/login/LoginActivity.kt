@@ -11,6 +11,7 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.WindowInsets
 import android.view.WindowManager
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -43,6 +44,8 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var password: EditTextPassword
     private lateinit var loginButton: ButtonLogin
 
+    private lateinit var progressView: ProgressBar
+
     private lateinit var viewModel: LoginViewModel
 
     private var isEmail: Boolean = false
@@ -50,26 +53,9 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login2)
-
-        binding = ActivityLogin2Binding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        email = binding.EditTextEmail
-        password = binding.EditTextPassword
-        loginButton = binding.loginButton
 
         setupView()
-
-        if (!intent.getStringExtra(EMAIL).isNullOrEmpty()) {
-            email.setText(intent.getStringExtra(EMAIL))
-            isEmail = true
-        }
-        if (!intent.getStringExtra(PASSWORD).isNullOrEmpty()) {
-            password.setText(intent.getStringExtra(PASSWORD))
-            isPassword = true
-        }
-
+        progressBars()
         onClicked()
     }
 
@@ -84,6 +70,36 @@ class LoginActivity : AppCompatActivity() {
             )
         }
         supportActionBar?.hide()
+
+        binding = ActivityLogin2Binding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        email = binding.EditTextEmail
+        password = binding.EditTextPassword
+        loginButton = binding.loginButton
+
+        if (!intent.getStringExtra(EMAIL).isNullOrEmpty()) {
+            email.setText(intent.getStringExtra(EMAIL))
+            isEmail = true
+        }
+        if (!intent.getStringExtra(PASSWORD).isNullOrEmpty()) {
+            password.setText(intent.getStringExtra(PASSWORD))
+            isPassword = true
+        }
+    }
+
+    private fun progressBars() {
+        progressView = binding.progressBar
+        showProgressBar()
+        hideProgressBar()
+    }
+
+    private fun showProgressBar() {
+        progressView.visibility = ProgressBar.VISIBLE
+    }
+
+    private fun hideProgressBar() {
+        progressView.visibility = ProgressBar.INVISIBLE
     }
 
     private fun loginButtonEnable() {
@@ -92,22 +108,24 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun onClicked() {
+        loginButtonEnable()
+        textEmail()
+        textPassword()
+
         viewModel = ViewModelProvider(
             this@LoginActivity,
             LoginViewModel.Factory(preferences = UserInstance.getInstance(dataStore))
         )[LoginViewModel::class.java]
 
-        loginButtonEnable()
-        textEmail()
-        textPassword()
-
         loginButton.setOnClickListener {
+            showProgressBar()
             val client = ApiConfig.getApiService().login(
                 email.text.toString(),
                 password.text.toString()
             )
             client.enqueue(object : Callback<LoginResponse> {
                 override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+                    hideProgressBar()
                     val responseBody = response.body()
                     if (response.isSuccessful && responseBody != null) {
                         if (responseBody.error == true) {
@@ -203,8 +221,8 @@ class LoginActivity : AppCompatActivity() {
     companion object {
         const val EMAIL = "email"
         const val PASSWORD = "password"
+
         val emailRegex: Regex = Regex("^\\w+([.-]?\\w+)*@\\w+([.-]?\\w+)*(\\.\\w{2,3})+\$")
         val passwordRegex: Regex = Regex("^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{8,}\$")
-
     }
 }

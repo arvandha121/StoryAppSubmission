@@ -81,7 +81,7 @@ class StoryViewModelTest {
         }
 
         // Mock the behavior of viewModel.getStory(token)
-        `when`(viewModel.getStory(token)).thenReturn(story)
+        `when`(storyRepository.getStory(token)).thenReturn(story)
 
         // Call the method under test
         val actualStory = viewModel.getStory(token).getOrAwaitValue()
@@ -101,14 +101,39 @@ class StoryViewModelTest {
 
         val snapshot = differ.snapshot()
         Assert.assertNotNull(differ.snapshot())
+        Assert.assertEquals(dummyStory[0], differ.snapshot()[0])
         Assert.assertEquals(dummyStory.size, differ.snapshot().size)
-        Assert.assertEquals(dummyStory[0].name, differ.snapshot()[0]?.name)
-        Assert.assertEquals(dummyStory[0].photoUrl, differ.snapshot()[0]?.photoUrl)
-        Assert.assertEquals(dummyStory[0].description, differ.snapshot()[0]?.description)
-        Assert.assertEquals(dummyStory[0].createdAt, differ.snapshot()[0]?.createdAt)
-        Assert.assertEquals(dummyStory[0].id, differ.snapshot()[0]?.id)
-        Assert.assertEquals(dummyStory[0].lat, differ.snapshot()[0]?.lat)
-        Assert.assertEquals(dummyStory[0].lon, differ.snapshot()[0]?.lon)
+    }
+
+    @Test
+    @MediumTest
+    fun `when Get Story Should Return Empty List`() = mainCoroutineRules.runBlockingTest {
+        val emptyListData  = StoryPagingSource.snapshot(emptyList())
+        val story = MutableLiveData<PagingData<ListStory>>().apply {
+            value = emptyListData
+        }
+
+        // Mock the behavior of viewModel.getStory(token)
+        `when`(storyRepository.getStory(token)).thenReturn(story)
+
+        // Call the method under test
+        val actualStory = viewModel.getStory(token).getOrAwaitValue()
+
+        val differ = AsyncPagingDataDiffer(
+            diffCallback = StoryListAdapter.DIFF_CALLBACK,
+            updateCallback = noopListUpdateCallback,
+            mainDispatcher = mainCoroutineRules.dispatcher,
+            workerDispatcher = mainCoroutineRules.dispatcher,
+        )
+
+        differ.submitData(actualStory)
+
+        advanceUntilIdle()
+
+        verify(storyRepository).getStory(token)
+
+        val snapshot = differ.snapshot()
+        Assert.assertEquals(0, snapshot.size)
     }
 
     @Test
