@@ -9,7 +9,7 @@
 
 
 ## Tech Stack
-- Kotlin programming language
+- [Kotlin programming language](https://shorturl.at/xBJ03)
 - [Retrofit2](https://github.com/square/retrofit)
 - [Glide](https://github.com/bumptech/glide)
 - [DataStore](https://developer.android.com/topic/libraries/architecture/datastore)
